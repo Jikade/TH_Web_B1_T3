@@ -1,0 +1,19 @@
+﻿@model _2380600659_HieuNguyen.Models.Category
+
+@{
+    ViewData["Title"] = "Category Details";
+}
+
+<h2 class="mb-4">Category Details</h2>
+
+<div class="card p-4 shadow">
+
+    <p><strong>ID:</strong> @Model.Id</p>
+
+    <p><strong>Category Name:</strong> @Model.Name</p>
+
+    <a asp-action="Index" class="btn btn-secondary">
+        Back
+    </a>
+
+</div>

@@ -1,0 +1,27 @@
+﻿@model _2380600659_HieuNguyen.Models.Category
+
+@{
+    ViewData["Title"] = "Add Category";
+}
+
+<h2 class="mb-4">Add Category</h2>
+
+<div class="card p-4 shadow">
+    <form asp-action="Add" method="post">
+
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" placeholder="Enter category name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-success">
+            Save
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary">
+            Back
+        </a>
+
+    </form>
+</div>
