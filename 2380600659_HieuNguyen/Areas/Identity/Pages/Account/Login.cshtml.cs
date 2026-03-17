@@ -21,11 +21,15 @@ namespace _2380600659_HieuNguyen.Areas.Identity.Pages.Account
     public class LoginModel : PageModel
     {
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager; // 1. Thêm dòng này
         private readonly ILogger<LoginModel> _logger;
 
-        public LoginModel(SignInManager<ApplicationUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<ApplicationUser> signInManager,
+                          UserManager<ApplicationUser> userManager, // 2. Thêm dòng này
+                          ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
+            _userManager = userManager; // 3. Thêm dòng này
             _logger = logger;
         }
 
@@ -116,6 +120,20 @@ namespace _2380600659_HieuNguyen.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
+
+                    // ---- THÊM ĐOẠN CODE KIỂM TRA ROLE NÀY ----
+                    var user = await _userManager.FindByEmailAsync(Input.Email);
+                    if (user != null)
+                    {
+                        var roles = await _userManager.GetRolesAsync(user);
+                        if (roles.Contains(SD.Role_Admin)) // SD.Role_Admin chính là "Admin"
+                        {
+                            // Nếu là Admin, bẻ lái thẳng vào đường dẫn của Area Admin
+                            return LocalRedirect("~/Admin/Product/Index");
+                        }
+                    }
+                    // ------------------------------------------
+
                     return LocalRedirect(returnUrl);
                 }
                 if (result.RequiresTwoFactor)

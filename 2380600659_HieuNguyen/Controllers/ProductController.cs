@@ -20,13 +20,7 @@ namespace _2380600659_HieuNguyen.Controllers
             var products = await _productRepository.GetAllAsync();
             return View(products);
         }
-        // Hiển thị form thêm sản phẩm mới
-        public async Task<IActionResult> Add()
-        {
-            var categories = await _categoryRepository.GetAllAsync();
-            ViewBag.Categories = new SelectList(categories, "Id", "Name");
-            return View();
-        }
+        
         
         
         //Nhớ tạo folder images trong wwwroot
