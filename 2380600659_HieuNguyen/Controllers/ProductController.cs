@@ -15,14 +15,27 @@ namespace _2380600659_HieuNguyen.Controllers
             _categoryRepository = categoryRepository;
         }
         // Hiển thị danh sách sản phẩm
-        public async Task<IActionResult> Index()
+        // Thêm tham số int? categoryId
+        public async Task<IActionResult> Index(int? categoryId)
         {
             var products = await _productRepository.GetAllAsync();
+
+            // 1. Lọc sản phẩm theo danh mục
+            if (categoryId != null && categoryId > 0)
+            {
+                products = products.Where(p => p.CategoryId == categoryId);
+            }
+
+            // 2. Lấy danh sách danh mục gửi ra View làm Sidebar
+            var categories = await _categoryRepository.GetAllAsync();
+            ViewBag.Categories = categories;
+            ViewBag.CurrentCategoryId = categoryId; // Để highlight danh mục đang chọn
+
             return View(products);
         }
-        
-        
-        
+
+
+
         //Nhớ tạo folder images trong wwwroot
         // Hiển thị thông tin chi tiết sản phẩm
         public async Task<IActionResult> Display(int id)

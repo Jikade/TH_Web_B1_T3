@@ -4,54 +4,78 @@
     ViewData["Title"] = "Products";
 }
 
-<h2 class="mb-4">Product Management</h2>
-
-
-
-<table class="table table-bordered table-hover shadow">
-    <thead class="table-dark">
-        <tr>
-            <th width="120">Image</th>
-            <th>Name</th>
-            <th width="120">Price</th>
-            <th>Description</th>
-            <th width="150">Category</th>
-            <th width="200">Actions</th>
-        </tr>
-    </thead>
-
-    <tbody>
-        @foreach (var product in Model)
-        {
-            <tr>
-                <td>
-                    @if (!string.IsNullOrEmpty(product.ImageUrl))
-                    {
-                        <img src="@product.ImageUrl" style="width:80px;height:80px;object-fit:cover;border-radius:8px;">
-                    }
-                </td>
-
-                <td>@product.Name</td>
-
-                <td>
-                    <span class="text-success fw-bold">
-                        $@product.Price
-                    </span>
-                </td>
-
-                <td>@product.Description</td>
-
-                <td>@product.Category?.Name</td>
-
-                <td>
-                    <a asp-action="Display" asp-route-id="@product.Id"
-                       class="btn btn-info btn-sm">
-                        View
+<div class="row">
+    <div class="col-md-3 mb-4">
+        <h4 class="mb-3">Danh mục sản phẩm</h4>
+        <div class="list-group shadow-sm">
+            <a asp-action="Index" asp-route-categoryId=""
+                   class="list-group-item list-group-item-action @(ViewBag.CurrentCategoryId == null ? "active" : "")">
+                📁 Tất cả sản phẩm
+            </a>
+            
+            @if (ViewBag.Categories != null)
+            {
+                foreach (var cat in ViewBag.Categories)
+                {
+                    <a asp-action="Index" asp-route-categoryId="@cat.Id"
+                           class="list-group-item list-group-item-action @(ViewBag.CurrentCategoryId == cat.Id ? "active" : "")">
+                        @cat.Name
                     </a>
+                }
+            }
+        </div>
+    </div>
 
-                    
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+    <div class="col-md-9">
+        <h2 class="mb-4">Danh sách sản phẩm</h2>
+
+        <table class="table table-bordered table-hover shadow bg-white">
+            <thead class="table-dark">
+                <tr>
+                    <th width="120">Image</th>
+                    <th>Name</th>
+                    <th width="120">Price</th>
+                    <th>Description</th>
+                    <th width="150">Category</th>
+                    <th width="100">Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-danger py-4">
+                            Không có sản phẩm nào thuộc danh mục này!
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    @foreach (var product in Model)
+                    {
+                        <tr>
+                            <td class="text-center">
+                                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                                {
+                                    <img src="@product.ImageUrl" style="width:80px;height:80px;object-fit:cover;border-radius:8px;">
+                                }
+                            </td>
+                            <td class="align-middle">@product.Name</td>
+                            <td class="align-middle">
+                                <span class="text-success fw-bold">$@product.Price</span>
+                            </td>
+                            <td class="align-middle">@product.Description</td>
+                            <td class="align-middle">@product.Category?.Name</td>
+                            <td class="align-middle text-center">
+                                <a asp-action="Display" asp-route-id="@product.Id" class="btn btn-info btn-sm">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

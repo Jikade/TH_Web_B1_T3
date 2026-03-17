@@ -22,9 +22,24 @@ namespace _2380600659_HieuNguyen.Areas.Admin.Controllers
             _env = env;
         }
 
-        public async Task<IActionResult> Index()
+        // Thêm tham số int? categoryId vào hàm Index
+        public async Task<IActionResult> Index(int? categoryId)
         {
             var products = await _productRepository.GetAllAsync();
+
+            // 1. Lọc sản phẩm theo danh mục nếu người dùng có chọn
+            if (categoryId != null && categoryId > 0)
+            {
+                products = products.Where(p => p.CategoryId == categoryId);
+            }
+
+            // 2. Lấy danh sách danh mục để đổ vào Dropdown List (Thẻ Select)
+            var categories = await _categoryRepository.GetAllAsync();
+            ViewBag.Categories = new SelectList(categories, "Id", "Name", categoryId);
+
+            // Lưu lại CategoryId đang chọn để giữ trạng thái cho Dropdown
+            ViewBag.CurrentCategoryId = categoryId;
+
             return View(products);
         }
 
