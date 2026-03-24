@@ -33,9 +33,15 @@
                 <b>Category:</b> @Model.Category?.Name
             </p>
 
-            <a asp-action="Index" class="btn btn-secondary mt-3">
-                Back to List
-            </a>
+            <form method="post" asp-controller="ShoppingCart" asp-action="AddToCart">
+                <input type="hidden" name="productId" value="@Model.Id" />
+                <div class="input-group mb-3" style="width: 150px;">
+                    <span class="input-group-text">SL:</span>
+                    <input type="number" name="count" class="form-control" value="1" min="1" />
+                </div>
+                <button type="submit" class="btn btn-primary shadow-0"> <i class="me-1 fa fa-shopping-basket"></i> Thêm vào giỏ </button>
+                <a asp-action="Index" class="btn btn-secondary mt-2">Quay lại danh sách</a>
+            </form>
 
         </div>
 

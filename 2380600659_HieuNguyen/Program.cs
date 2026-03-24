@@ -32,6 +32,8 @@ builder.Services.AddRazorPages();
 builder.Services.AddScoped<IProductRepository, EFProductRepository>();
 builder.Services.AddScoped<ICategoryRepository, EFCategoryRepository>();
 
+// THÊM DÒNG NÀY ĐỂ FIX LỖI:
+builder.Services.AddScoped<IOrderRepository, EFOrderRepository>();
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
 

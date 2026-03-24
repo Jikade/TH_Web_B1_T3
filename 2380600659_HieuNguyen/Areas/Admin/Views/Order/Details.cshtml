@@ -1,0 +1,50 @@
+﻿@model _2380600659_HieuNguyen.Models.OrderHeader
+@using _2380600659_HieuNguyen.Models
+<div class="container mt-4">
+    <h2>Chi tiết đơn hàng #@Model.Id</h2>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card p-3 shadow-sm">
+                <h4>Thông tin khách hàng</h4>
+                <p><strong>Tên:</strong> @Model.Name</p>
+                <p><strong>SĐT:</strong> @Model.PhoneNumber</p>
+                <p><strong>Địa chỉ:</strong> @Model.Address</p>
+                <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                <p><strong>Trạng thái:</strong> <span class="text-danger fw-bold">@Model.OrderStatus</span></p>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card p-3 shadow-sm">
+                <h4>Sản phẩm</h4>
+                <ul class="list-group mb-3">
+                    @foreach (var item in ViewBag.OrderDetails as IEnumerable<OrderDetail>)
+                    {
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div><h6 class="my-0">@item.Product.Name</h6><small class="text-muted">Giá: $@item.Price | SL: @item.Count</small></div>
+                            <span class="text-muted">$@(item.Price * item.Count)</span>
+                        </li>
+                    }
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <span class="text-success fw-bold">Tổng thanh toán</span><strong>$@Model.OrderTotal</strong>
+                    </li>
+                </ul>
+
+                <form asp-action="UpdateStatus" method="post" class="mt-3">
+                    <input type="hidden" name="orderId" value="@Model.Id" />
+                    <label class="fw-bold">Cập nhật trạng thái:</label>
+                    <div class="input-group">
+                        <select name="status" class="form-select">
+                            <option value="@SD.StatusPending">Pending (Chờ duyệt)</option>
+                            <option value="@SD.StatusApproved">Approved (Đã duyệt)</option>
+                            <option value="@SD.StatusShipped">Shipped (Đang giao)</option>
+                            <option value="@SD.StatusCancelled">Cancelled (Hủy)</option>
+                        </select>
+                        <button type="submit" class="btn btn-primary">Cập nhật</button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+    </div>
+    <a asp-action="Index" class="btn btn-secondary mt-3">Quay lại danh sách</a>
+</div>

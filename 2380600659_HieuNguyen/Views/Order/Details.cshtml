@@ -1,0 +1,71 @@
+﻿@model _2380600659_HieuNguyen.Models.OrderHeader
+@using _2380600659_HieuNguyen.Models
+
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Chi tiết đơn hàng <span class="text-primary">#@Model.Id</span></h2>
+        <a asp-action="Index" class="btn btn-secondary">⬅ Quay lại lịch sử</a>
+    </div>
+
+    <div class="row">
+        <div class="col-md-5">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Thông tin giao hàng</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Người nhận:</strong> @Model.Name</p>
+                    <p><strong>Số điện thoại:</strong> @Model.PhoneNumber</p>
+                    <p><strong>Địa chỉ:</strong> @Model.Address</p>
+                    <p><strong>Ngày đặt:</strong> @Model.OrderDate.ToString("dd/MM/yyyy HH:mm")</p>
+                    <hr />
+                    <p class="mb-0 fs-5">
+                        <strong>Trạng thái Đơn hàng:</strong>
+                        <span class="text-danger fw-bold">@Model.OrderStatus</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <div class="card shadow-sm">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">Sản phẩm đã đặt</h5>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-borderless mb-0">
+                        <thead class="border-bottom bg-light">
+                            <tr>
+                                <th>Sản phẩm</th>
+                                <th class="text-center">Đơn giá</th>
+                                <th class="text-center">SL</th>
+                                <th class="text-end">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.OrderDetails as IEnumerable<OrderDetail>)
+                            {
+                                <tr class="border-bottom">
+                                    <td>@item.Product.Name</td>
+                                    <td class="text-center">$@item.Price</td>
+                                    <td class="text-center">@item.Count</td>
+                                    <td class="text-end fw-bold">$@(item.Price * item.Count)</td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tfoot>
+                            <tr class="bg-light">
+                                <td colspan="3" class="text-end fw-bold fs-5">Tổng thanh toán:</td>
+                                <td class="text-end fw-bold text-success fs-5">$@Model.OrderTotal</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

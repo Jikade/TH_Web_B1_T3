@@ -1,0 +1,23 @@
+﻿@model IEnumerable<_2380600659_HieuNguyen.Models.OrderHeader>
+<div class="container mt-4">
+    <h2>Quản lý đơn hàng</h2>
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr><th>Mã ĐH</th><th>Tên KH</th><th>SĐT</th><th>Ngày Đặt</th><th>Tổng tiền</th><th>Trạng thái</th><th>Hành động</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.PhoneNumber</td>
+                    <td>@item.OrderDate.ToString("dd/MM/yyyy")</td>
+                    <td>$@item.OrderTotal</td>
+                    <td><span class="badge bg-info text-dark">@item.OrderStatus</span></td>
+                    <td><a asp-action="Details" asp-route-orderId="@item.Id" class="btn btn-warning btn-sm">Chi tiết & Duyệt</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

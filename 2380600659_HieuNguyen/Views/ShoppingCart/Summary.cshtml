@@ -1,0 +1,29 @@
+﻿@model _2380600659_HieuNguyen.Models.OrderHeader
+<div class="container mt-4">
+    <form method="post">
+        <div class="row">
+            <div class="col-md-6">
+                <h4>Thông tin giao hàng</h4>
+                <div class="mb-3"><label>Tên</label><input asp-for="Name" class="form-control" /></div>
+                <div class="mb-3"><label>Điện thoại</label><input asp-for="PhoneNumber" class="form-control" /></div>
+                <div class="mb-3"><label>Địa chỉ</label><input asp-for="Address" class="form-control" /></div>
+            </div>
+            <div class="col-md-6">
+                <h4>Đơn hàng của bạn</h4>
+                <ul class="list-group mb-3">
+                    @foreach (var details in ViewBag.CartList)
+                    {
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div><h6 class="my-0">@details.Product.Name</h6><small class="text-muted">SL: @details.Count</small></div>
+                            <span class="text-muted">$@(details.Product.Price * details.Count)</span>
+                        </li>
+                    }
+                    <li class="list-group-item d-flex justify-content-between bg-light">
+                        <span class="text-success">Tổng (USD)</span><strong>$@Model.OrderTotal</strong>
+                    </li>
+                </ul>
+                <button type="submit" class="btn btn-primary w-100">Đặt Hàng</button>
+            </div>
+        </div>
+    </form>
+</div>
