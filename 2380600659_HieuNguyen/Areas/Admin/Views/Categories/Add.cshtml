@@ -1,27 +1,33 @@
 ﻿@model _2380600659_HieuNguyen.Models.Category
 
 @{
-    ViewData["Title"] = "Add Category";
+    ViewData["Title"] = "Thêm Danh mục";
 }
 
-<h2 class="mb-4">Add Category</h2>
+<div class="row justify-content-center mt-4">
+    <div class="col-md-6">
+        <div class="card admin-card shadow-sm">
+            <div class="card-header bg-white border-bottom py-3">
+                <h4 class="mb-0 fw-bold text-primary">Thêm Danh mục Mới</h4>
+            </div>
+            <div class="card-body p-4">
+                <form asp-action="Add" method="post">
+                    <div class="mb-4">
+                        <label asp-for="Name" class="form-label fw-bold text-muted">Tên Danh mục</label>
+                        <input asp-for="Name" class="form-control form-control-lg bg-light" placeholder="Nhập tên danh mục..." />
+                        <span asp-validation-for="Name" class="text-danger small"></span>
+                    </div>
 
-<div class="card p-4 shadow">
-    <form asp-action="Add" method="post">
-
-        <div class="mb-3">
-            <label asp-for="Name" class="form-label"></label>
-            <input asp-for="Name" class="form-control" placeholder="Enter category name" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+                    <div class="d-flex gap-2">
+                        <button type="submit" class="btn btn-success px-4">Lưu dữ liệu</button>
+                        <a asp-action="Index" class="btn btn-secondary px-4">Hủy / Quay lại</a>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <button type="submit" class="btn btn-success">
-            Save
-        </button>
-
-        <a asp-action="Index" class="btn btn-secondary">
-            Back
-        </a>
-
-    </form>
+    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

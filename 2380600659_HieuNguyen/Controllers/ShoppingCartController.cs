@@ -44,6 +44,26 @@ namespace _2380600659_HieuNguyen.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ClearCart()
+        {
+            var claimsIdentity = (ClaimsIdentity)User.Identity;
+            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            // Tìm tất cả sản phẩm trong giỏ hàng của user hiện tại
+            var cartItems = await _context.ShoppingCarts.Where(u => u.ApplicationUserId == userId).ToListAsync();
+
+            if (cartItems.Any())
+            {
+                // Xoá toàn bộ
+                _context.ShoppingCarts.RemoveRange(cartItems);
+                await _context.SaveChangesAsync();
+            }
+
+            return RedirectToAction(nameof(Index));
+        }
+
         public async Task<IActionResult> Index()
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
@@ -102,7 +122,19 @@ namespace _2380600659_HieuNguyen.Controllers
             _context.ShoppingCarts.RemoveRange(cartList);
             await _context.SaveChangesAsync();
 
-            return View("OrderConfirmation", orderHeader.Id);
+            // Sửa đổi ở đây: Chuyển hướng sang Action OrderConfirmation dạng GET
+            return RedirectToAction(nameof(OrderConfirmation), new { id = orderHeader.Id });
+        }
+
+        // --- THÊM HÀM NÀY ĐỂ LẤY THÔNG TIN ĐƠN HÀNG VÀ HIỂN THỊ QR ---
+        public async Task<IActionResult> OrderConfirmation(int id)
+        {
+            var orderHeader = await _orderRepository.GetOrderByIdAsync(id);
+            if (orderHeader == null)
+            {
+                return NotFound();
+            }
+            return View(orderHeader);
         }
     }
 }

@@ -2,54 +2,62 @@
 @using Microsoft.AspNetCore.Mvc.Rendering
 
 @{
-    ViewData["Title"] = "Add Product";
+    ViewData["Title"] = "Thêm Sản phẩm";
 }
 
-<h2 class="mb-4">Add New Product</h2>
+<div class="row justify-content-center mt-3">
+    <div class="col-lg-8">
+        <div class="card admin-card shadow-sm">
+            <div class="card-header bg-white border-bottom py-3">
+                <h4 class="mb-0 fw-bold text-primary">📦 Thêm Sản Phẩm Mới</h4>
+            </div>
 
-<div class="card shadow p-4">
+            <div class="card-body p-4 p-md-5">
+                <form asp-action="Add" method="post" enctype="multipart/form-data">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Name" class="form-label fw-bold text-muted">Tên sản phẩm</label>
+                            <input asp-for="Name" class="form-control" placeholder="Nhập tên sản phẩm" />
+                            <span asp-validation-for="Name" class="text-danger small"></span>
+                        </div>
 
-    <form asp-action="Add" method="post" enctype="multipart/form-data">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Price" class="form-label fw-bold text-muted">Giá (USD)</label>
+                            <input asp-for="Price" class="form-control" placeholder="0.00" />
+                            <span asp-validation-for="Price" class="text-danger small"></span>
+                        </div>
+                    </div>
 
-        <div class="mb-3">
-            <label asp-for="Name" class="form-label"></label>
-            <input asp-for="Name" class="form-control" placeholder="Enter product name" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+                    <div class="mb-3">
+                        <label asp-for="CategoryId" class="form-label fw-bold text-muted">Danh mục</label>
+                        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-select bg-light">
+                            <option disabled selected>-- Chọn danh mục --</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold text-muted">Hình ảnh sản phẩm</label>
+                        <input type="file" asp-for="ImageUrl" class="form-control" accept="image/*" />
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Description" class="form-label fw-bold text-muted">Mô tả chi tiết</label>
+                        <textarea asp-for="Description" class="form-control" rows="4" placeholder="Nhập mô tả sản phẩm..."></textarea>
+                        <span asp-validation-for="Description" class="text-danger small"></span>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    <div class="d-flex justify-content-end gap-2">
+                        <a asp-action="Index" class="btn btn-light border px-4">Hủy bỏ</a>
+                        <button type="submit" class="btn btn-primary px-5 fw-bold">Thêm Sản Phẩm</button>
+                    </div>
+                </form>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label asp-for="Price" class="form-label"></label>
-            <input asp-for="Price" class="form-control" />
-            <span asp-validation-for="Price" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="Description" class="form-label"></label>
-            <textarea asp-for="Description" class="form-control"></textarea>
-            <span asp-validation-for="Description" class="text-danger"></span>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="CategoryId" class="form-label">Category</label>
-            <select asp-for="CategoryId"
-                    asp-items="ViewBag.Categories"
-                    class="form-select">
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label">Product Image</label>
-            <input type="file" asp-for="ImageUrl" class="form-control" />
-        </div>
-
-        <button type="submit" class="btn btn-success">
-            Save Product
-        </button>
-
-        <a asp-action="Index" class="btn btn-secondary">
-            Back
-        </a>
-
-    </form>
-
+    </div>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

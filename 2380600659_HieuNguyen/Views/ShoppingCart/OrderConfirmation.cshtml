@@ -1,6 +1,67 @@
-﻿@model int
-<div class="container mt-5 text-center">
-    <h1 class="text-success">Đặt hàng thành công!</h1>
-    <p>Mã đơn hàng của bạn là: <strong>#@Model</strong></p>
-    <a asp-controller="Product" asp-action="Index" class="btn btn-primary">Tiếp tục mua sắm</a>
+﻿@model _2380600659_HieuNguyen.Models.OrderHeader
+
+@{
+    ViewData["Title"] = "Đặt hàng thành công";
+
+    // 1. Linh hoạt biến AMOUNT (Số tiền của đơn hàng hiện tại)
+    // Lưu ý: Nếu OrderTotal đang lưu tiền VNĐ thì giữ nguyên, nếu lưu USD thì bạn nhân tỷ giá nhé (VD: amount = (int)Model.OrderTotal * 25000)
+    var amount = (int)Model.OrderTotal;
+
+    // 2. Linh hoạt biến DESCRIPTION (Nội dung chuyển khoản linh hoạt theo Mã đơn hàng)
+    // Sử dụng dấu gạch dưới để URL an toàn và đẹp mắt giống như ví dụ của bạn
+    var description = $"Thanh_toan_don_hang_{Model.Id}";
+
+    // 3. Ghép vào link VietQR động
+    var qrUrl = $"https://img.vietqr.io/image/momo-0983947901-qr_only.png?amount={amount}&addInfo={description}";
+}
+
+<div class="container mt-5 mb-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+            <div class="card shadow-lg border-0 rounded-lg p-4 p-md-5 text-center">
+
+                <div class="mb-4">
+                    <div class="display-1 text-success mb-3">✅</div>
+                    <h2 class="text-success fw-bold">Đặt hàng thành công!</h2>
+                    <p class="fs-5 mt-3 text-muted">Cảm ơn bạn đã mua sắm. Mã đơn hàng của bạn là: <strong class="text-primary">#@Model.Id</strong></p>
+                </div>
+
+                <hr class="mb-4" />
+
+                <div class="row align-items-center bg-light p-4 rounded-3 shadow-sm mb-4">
+                    <div class="col-md-6 text-md-end border-md-end mb-4 mb-md-0 pe-md-4">
+                        <h5 class="fw-bold text-dark mb-3">Quét mã QR để thanh toán</h5>
+                        <p class="mb-2 fs-5">
+                            <strong>Số tiền thanh toán:</strong>
+                            <span class="text-danger fw-bold">
+                                @Model.OrderTotal.ToString("N0")
+                            </span>
+                        </p>
+                        <p class="mb-2 text-muted">
+                            Nội dung CK: <strong class="text-dark">@description</strong>
+                        </p>
+                        <p class="text-muted small mt-3 mb-0">
+                            <i>* Vui lòng quét mã QR bằng ứng dụng MoMo hoặc ứng dụng ngân hàng của bạn. Đơn hàng sẽ được Admin duyệt ngay sau khi nhận được thanh toán.</i>
+                        </p>
+                    </div>
+
+                    <div class="col-md-6 text-center text-md-start ps-md-4">
+                        <div class="bg-white p-2 d-inline-block rounded border shadow-sm">
+                            <img src="@qrUrl" alt="Mã QR Thanh Toán" class="img-fluid" style="max-width: 200px;" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <a asp-controller="Order" asp-action="Index" class="btn btn-outline-primary px-4 py-2 me-2 fw-bold" style="border-radius: 25px;">
+                        📜 Xem lịch sử đơn hàng
+                    </a>
+                    <a asp-controller="Product" asp-action="Index" class="btn btn-primary px-4 py-2 fw-bold" style="border-radius: 25px;">
+                        🛍️ Tiếp tục mua sắm
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>

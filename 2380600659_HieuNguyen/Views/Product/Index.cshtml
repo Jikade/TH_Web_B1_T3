@@ -1,81 +1,121 @@
 ﻿@model IEnumerable<_2380600659_HieuNguyen.Models.Product>
+@using _2380600659_HieuNguyen.Models
 
 @{
-    ViewData["Title"] = "Products";
+    ViewData["Title"] = "Shop Now";
 }
 
-<div class="row">
-    <div class="col-md-3 mb-4">
-        <h4 class="mb-3">Danh mục sản phẩm</h4>
-        <div class="list-group shadow-sm">
-            <a asp-action="Index" asp-route-categoryId=""
-                   class="list-group-item list-group-item-action @(ViewBag.CurrentCategoryId == null ? "active" : "")">
-                📁 Tất cả sản phẩm
-            </a>
-            
-            @if (ViewBag.Categories != null)
+<div class="container-fluid bg-light py-5 mb-4 shadow-sm" style="border-radius: 12px;">
+    <div class="container text-center py-5">
+        <h1 class="display-3 fw-bold text-dark">LATEST PRODUCTS</h1>
+        <p class="fs-4 text-muted mb-4">Discover our newest arrivals with incredible prices.</p>
+        <a href="#products" class="btn btn-primary btn-lg px-5 py-3 fs-5" style="border-radius: 30px;">SHOP NOW</a>
+    </div>
+</div>
+
+<div class="container" id="products">
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-2">
+        <nav aria-label="breadcrumb" class="mb-0">
+            <ol class="breadcrumb mb-0">
+                <li class="breadcrumb-item"><a asp-action="Index" asp-route-categoryId="">Trang chủ</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Sản phẩm</li>
+            </ol>
+        </nav>
+
+        <div class="d-flex align-items-center gap-2">
+
+            @if (User.Identity.IsAuthenticated)
             {
-                foreach (var cat in ViewBag.Categories)
-                {
-                    <a asp-action="Index" asp-route-categoryId="@cat.Id"
-                           class="list-group-item list-group-item-action @(ViewBag.CurrentCategoryId == cat.Id ? "active" : "")">
-                        @cat.Name
-                    </a>
-                }
+                <a asp-controller="Order" asp-action="Index" class="btn btn-outline-info fw-bold shadow-sm" style="border-radius: 20px;">
+                    📜 Lịch sử đơn hàng
+                </a>
             }
+
+            <div class="dropdown">
+                <button class="btn btn-outline-primary dropdown-toggle fw-bold shadow-sm" type="button" id="categoryDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 20px;">
+                    📁 Lọc theo danh mục
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="categoryDropdown">
+                    <li>
+                        <a class="dropdown-item @(ViewBag.CurrentCategoryId == null ? "active fw-bold" : "")" asp-action="Index" asp-route-categoryId="">
+                            Tất cả sản phẩm
+                        </a>
+                    </li>
+                    @if (ViewBag.Categories != null)
+                    {
+                        <li><hr class="dropdown-divider"></li>
+                        foreach (var cat in ViewBag.Categories as IEnumerable<Category>)
+                        {
+                            <li>
+                                <a class="dropdown-item @(ViewBag.CurrentCategoryId == cat.Id ? "active fw-bold" : "")" asp-action="Index" asp-route-categoryId="@cat.Id">
+                                    @cat.Name
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
         </div>
     </div>
 
-    <div class="col-md-9">
-        <h2 class="mb-4">Danh sách sản phẩm</h2>
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info py-4 text-center">
+            <i class="me-2 fa fa-info-circle"></i> Không có sản phẩm nào thuộc danh mục này!
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var product in Model)
+            {
+                <div class="col">
+                    <div class="card card-product shadow-sm h-100">
+                        @if (!string.IsNullOrEmpty(product.ImageUrl))
+                        {
+                            <img src="@product.ImageUrl" class="card-img-top card-product-image" alt="@product.Name">
+                        }
+                        else
+                        {
+                            <img src="/images/no-image.png" class="card-img-top card-product-image" alt="No image">
+                        }
 
-        <table class="table table-bordered table-hover shadow bg-white">
-            <thead class="table-dark">
-                <tr>
-                    <th width="120">Image</th>
-                    <th>Name</th>
-                    <th width="120">Price</th>
-                    <th>Description</th>
-                    <th width="150">Category</th>
-                    <th width="100">Actions</th>
-                </tr>
-            </thead>
-
-            <tbody>
-                @if (!Model.Any())
-                {
-                    <tr>
-                        <td colspan="6" class="text-center text-danger py-4">
-                            Không có sản phẩm nào thuộc danh mục này!
-                        </td>
-                    </tr>
-                }
-                else
-                {
-                    @foreach (var product in Model)
-                    {
-                        <tr>
-                            <td class="text-center">
-                                @if (!string.IsNullOrEmpty(product.ImageUrl))
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title fw-bold text-dark mb-1">@product.Name</h5>
+                            <p class="card-text text-muted small flex-grow-1">
+                                @if (!string.IsNullOrEmpty(product.Description) && product.Description.Length > 60)
                                 {
-                                    <img src="@product.ImageUrl" style="width:80px;height:80px;object-fit:cover;border-radius:8px;">
+                                    @product.Description.Substring(0, 60)
+
+                                    <span>...</span>
                                 }
-                            </td>
-                            <td class="align-middle">@product.Name</td>
-                            <td class="align-middle">
-                                <span class="text-success fw-bold">$@product.Price</span>
-                            </td>
-                            <td class="align-middle">@product.Description</td>
-                            <td class="align-middle">@product.Category?.Name</td>
-                            <td class="align-middle text-center">
-                                <a asp-action="Display" asp-route-id="@product.Id" class="btn btn-info btn-sm">
+                                else
+                                {
+                                    @product.Description
+                                }
+                            </p>
+
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <span class="card-product-price text-success fw-bold fs-5">$@product.Price</span>
+                                <span class="badge bg-light text-dark border card-product-category">@product.Category?.Name</span>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <a asp-action="Display" asp-route-id="@product.Id" class="btn btn-outline-primary btn-sm w-100" style="border-radius: 20px;">
                                     View
                                 </a>
-                            </td>
-                        </tr>
-                    }
-                }
-            </tbody>
-        </table>
-    </div>
+                                <form method="post" asp-controller="ShoppingCart" asp-action="AddToCart" class="w-auto">
+                                    <input type="hidden" name="productId" value="@product.Id" />
+                                    <input type="hidden" name="count" value="1" />
+                                    <button type="submit" class="btn btn-success btn-sm px-3" style="border-radius: 20px;" title="Thêm vào giỏ hàng">
+                                        🛒
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
 </div>
